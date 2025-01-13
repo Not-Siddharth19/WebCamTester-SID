@@ -1,0 +1,137 @@
+/* GEnral stYle */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+h1 {
+  color: #4CAF50;
+  margin-bottom: 20px;
+}
+
+
+
+
+.tooltip {
+  position:static;
+  padding: 10px;
+  font-size: 16px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: var(--secondary-color);
+  border: 2px solid;
+  border-color: #4CAF50;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s linear;
+  width: 50px;
+  height: 50px;
+  text-shadow: #4CAF50;
+}
+.tooltip {
+  visibility: visible;
+  color: #4CAF50;
+ 
+}
+.tooltip:hover {
+  background-color: #4CAF50;
+  color: #4CAF50;
+  box-shadow: #4CAF50;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  background-color:#4CAF50;
+  color: #4CAF50;
+  box-shadow: #4CAF50;
+}
+
+
+.dark-mode {
+  background-color: #1a1a1a;
+  color: white;
+}
+
+.container {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 7px 40px #4CAF50;
+  width: 100%;
+  max-width: 500px;
+  transition: background-color 0.3s linear;
+}
+
+.container .tooltip {
+  background-color: #fc1111;
+  color: white;
+}
+
+.container .tooltip:hover,
+.dark-mode .container {
+  background-color: #1a1a1a;
+  color: white;
+}
+
+video {
+  width: 100%;
+  max-width: 400px;
+  margin: 20px 0;
+  border-radius: 10px;
+  background-color: #ddd;
+  box-shadow: #4CAF50;
+}
+
+canvas {
+  display: none;
+}
+
+button {
+  margin: 10px;
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+.btn-start {
+  background-color: #4CAF50;
+  color: #ffffff;
+}
+
+.btn-stop {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-screenshot {
+  background-color: #008CBA;
+  color: white;
+}
+
+button:disabled {
+  background-color: #b1b1b1;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background-color: #333;
+}
+
+.status {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
+}
