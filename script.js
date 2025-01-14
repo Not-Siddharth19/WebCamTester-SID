@@ -3,25 +3,24 @@ const startButton = document.getElementById('startWebcam');
 const stopButton = document.getElementById('stopWebcam');
 const screenshotButton = document.getElementById('screenshot');
 const statusElement = document.getElementById('status');
+const screenshotPreview = document.getElementById('screenshotPreview');
+
 let stream;
 
 function toggleDarkMode() {
     document.body.classList.toggle("dark-mode");
-  }
-  
+}
 
-  function toggleFullscreen() {
+function toggleFullscreen() {
     if (!document.fullscreenElement) {
-      video.requestFullscreen();
+        video.requestFullscreen();
     } else {
-      document.exitFullscreen();
+        document.exitFullscreen();
     }
-  }
-  
+}
 
 startButton.addEventListener('click', async () => {
     try {
-        // Request webcam access
         stream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = stream;
         startButton.disabled = true;
@@ -35,7 +34,6 @@ startButton.addEventListener('click', async () => {
 });
 
 stopButton.addEventListener('click', () => {
-    // Stop webcam and clear video source
     if (stream) {
         stream.getTracks().forEach(track => track.stop());
         video.srcObject = null;
@@ -52,15 +50,20 @@ screenshotButton.addEventListener('click', () => {
         const context = canvas.getContext('2d');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
+
+        // Draw the current video frame on the temporary canvas
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const dataUrl = canvas.toDataURL('image/png');
 
-        const link = document.createElement('a');
-        link.href = dataUrl;
-        link.download = 'webcam-screenshot.png';
-        link.click();
+        // Update the preview canvas with the same content
+        const previewContext = screenshotPreview.getContext('2d');
+        screenshotPreview.width = canvas.width;
+        screenshotPreview.height = canvas.height;
+        previewContext.drawImage(canvas, 0, 0, canvas.width, canvas.height);
 
-        statusElement.textContent = 'Status: Screenshot taken.';
+        // Show the preview canvas
+        screenshotPreview.style.display = 'block';
+
+        statusElement.textContent = 'Status: Screenshot preview updated.';
     } else {
         statusElement.textContent = 'Status: Start the webcam first!';
     }
