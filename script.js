@@ -3,7 +3,7 @@ const startButton = document.getElementById('startWebcam');
 const stopButton = document.getElementById('stopWebcam');
 const screenshotButton = document.getElementById('screenshot');
 const statusElement = document.getElementById('status');
-const screenshotPreview = document.getElementById('screenshotPreview');
+const screenshotsList = document.getElementById('screenshotsList');
 
 let stream;
 
@@ -54,17 +54,27 @@ screenshotButton.addEventListener('click', () => {
         // Draw the current video frame on the temporary canvas
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Update the preview canvas with the same content
-        const previewContext = screenshotPreview.getContext('2d');
-        screenshotPreview.width = canvas.width;
-        screenshotPreview.height = canvas.height;
-        previewContext.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+        // Create image URL and download link
+        const dataUrl = canvas.toDataURL('image/png');
 
-        // Show the preview canvas
-        screenshotPreview.style.display = 'block';
-
-        statusElement.textContent = 'Status: Screenshot preview updated.';
-    } else {
-        statusElement.textContent = 'Status: Start the webcam first!';
+        // Create the screenshot preview and download button
+        const screenshotPreviewDiv = document.createElement('div');
+        screenshotPreviewDiv.classList.add('screenshot-preview');
+        
+        const img = document.createElement('img');
+        img.src = dataUrl;
+        
+        const downloadButton = document.createElement('button');
+        downloadButton.textContent = 'Download';
+        downloadButton.onclick = () => {
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = 'screenshot.png';
+            link.click();
+        };
+        
+        screenshotPreviewDiv.appendChild(img);
+        screenshotPreviewDiv.appendChild(downloadButton);
+        screenshotsList.appendChild(screenshotPreviewDiv);
     }
 });
