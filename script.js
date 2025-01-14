@@ -10,7 +10,14 @@ function toggleDarkMode() {
   }
   
 
-
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      video.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+  
 
 startButton.addEventListener('click', async () => {
     try {
