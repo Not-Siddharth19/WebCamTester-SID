@@ -76,6 +76,7 @@ h1 {
 /* Container for video, buttons, and status */
 .container {
   padding: 20px;
+  position: relative;
   border-radius: 10px;
   background-color: #ffffff;
   box-shadow: 0 7px 40px #4CAF50;
@@ -186,4 +187,22 @@ button:hover:not(:disabled) {
   margin-top: 10px;
   font-size: 14px;
   color: #666;
+}
+
+/* Footer Section */
+.footer {
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  position: relative;  /* Let the footer be at the bottom when the content isn't enough */
+  bottom: 0; /* Stick to the bottom of the content */
+  left: 0;
+  border-top: 1px solid #ddd;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 14px;
 }
