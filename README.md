@@ -1,4 +1,4 @@
-# WebCamTester
+# 🎥 WebCamTester
 
 WebCamTester is a sleek and user-friendly web application designed to test and manage webcam functionality. With features like real-time webcam control, screenshot capture, and theme toggling, it's a perfect tool for ensuring your webcam works seamlessly.
 
