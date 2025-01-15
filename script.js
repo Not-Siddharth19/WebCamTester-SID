@@ -1,5 +1,4 @@
-// Webcam test and screenshot functionality
-
+// Get elements
 let webcamStream;
 let screenshotBtn = document.getElementById('screenshot');
 let screenshotsList = document.getElementById('screenshotsList');
@@ -8,16 +7,32 @@ let stopBtn = document.getElementById('stopWebcam');
 let statusDiv = document.getElementById('status');
 let video = document.getElementById('webcam');
 
+// Dark Mode toggle function
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+}
+
+// Fullscreen toggle function
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        video.requestFullscreen();
+    } else {
+        document.exitFullscreen();
+    }
+}
+
 // Start Webcam
 startBtn.onclick = async function () {
     try {
         webcamStream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = webcamStream;
+
         startBtn.disabled = true;
         stopBtn.disabled = false;
         screenshotBtn.disabled = false;
         statusDiv.textContent = 'Status: Webcam is active';
     } catch (error) {
+        console.error('Error accessing webcam:', error);
         statusDiv.textContent = 'Status: Error accessing webcam';
     }
 };
@@ -27,6 +42,7 @@ stopBtn.onclick = function () {
     if (webcamStream) {
         let tracks = webcamStream.getTracks();
         tracks.forEach(track => track.stop());
+
         video.srcObject = null;
         startBtn.disabled = false;
         stopBtn.disabled = true;
@@ -45,7 +61,6 @@ screenshotBtn.onclick = function () {
 
     let screenshotDataUrl = canvas.toDataURL('image/png');
     
-    // Create screenshot preview with download button
     let screenshotPreview = document.createElement('div');
     screenshotPreview.classList.add('screenshot-preview');
     
