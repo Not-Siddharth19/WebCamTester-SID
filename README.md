@@ -34,7 +34,7 @@ WebCamTester is a sleek and user-friendly web application designed to test and m
 ## 🌐 Deployment
 
 This application is live on GitHub Pages. Check it out here:
-[WebCamTester GitHub Pages](https://your-username.github.io/webcamtester/)
+[WebCamTester GitHub Pages](https://github.com/Not-Siddharth19/WebCamTester-SID.git)
 
 ---
 
