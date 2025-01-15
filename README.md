@@ -16,10 +16,10 @@ WebCamTester is a sleek and user-friendly web application designed to test and m
 ## 🔍 Preview
 
 ### Dark Mode
-![WebCamTester Dark Mode](https://raw.githubusercontent.com/your-username/webcamtester/Assets/AkkaDarkMode.png)
+![WebCamTester Dark Mode](Assets/AkkaDarkMode.png)
 
 ### Light Mode
-![WebCamTester Light Mode](https://raw.githubusercontent.com/your-username/webcamtester/main/Assets/AkkaTalksWithHerBF.png)
+![WebCamTester Light Mode](Assets/AkkaTalksWithHerBF.png)
 
 ---
 
