@@ -1,16 +1,18 @@
-const video = document.getElementById('webcam');
-const startButton = document.getElementById('startWebcam');
-const stopButton = document.getElementById('stopWebcam');
-const screenshotButton = document.getElementById('screenshot');
-const statusElement = document.getElementById('status');
-const screenshotsList = document.getElementById('screenshotsList');
+// Get elements
+let webcamStream;
+let screenshotBtn = document.getElementById('screenshot');
+let screenshotsList = document.getElementById('screenshotsList');
+let startBtn = document.getElementById('startWebcam');
+let stopBtn = document.getElementById('stopWebcam');
+let statusDiv = document.getElementById('status');
+let video = document.getElementById('webcam');
 
-let stream;
-
+// Dark Mode toggle function
 function toggleDarkMode() {
     document.body.classList.toggle("dark-mode");
 }
 
+// Fullscreen toggle function
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
         video.requestFullscreen();
@@ -19,62 +21,63 @@ function toggleFullscreen() {
     }
 }
 
-startButton.addEventListener('click', async () => {
+// Start Webcam
+startBtn.onclick = async function () {
     try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-        startButton.disabled = true;
-        stopButton.disabled = false;
-        screenshotButton.disabled = false;
-        statusElement.textContent = 'Status: Webcam is active.';
+        webcamStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = webcamStream;
+
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        screenshotBtn.disabled = false;
+        statusDiv.textContent = 'Status: Webcam is active';
     } catch (error) {
-        console.error('Error accessing the webcam:', error);
-        statusElement.textContent = 'Status: Error accessing webcam.';
+        console.error('Error accessing webcam:', error);
+        statusDiv.textContent = 'Status: Error accessing webcam';
     }
-});
+};
 
-stopButton.addEventListener('click', () => {
-    if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+// Stop Webcam
+stopBtn.onclick = function () {
+    if (webcamStream) {
+        let tracks = webcamStream.getTracks();
+        tracks.forEach(track => track.stop());
+
         video.srcObject = null;
-        startButton.disabled = false;
-        stopButton.disabled = true;
-        screenshotButton.disabled = true;
-        statusElement.textContent = 'Status: Webcam is stopped.';
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+        screenshotBtn.disabled = true;
+        statusDiv.textContent = 'Status: Webcam stopped';
     }
-});
+};
 
-screenshotButton.addEventListener('click', () => {
-    if (stream) {
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+// Take Screenshot
+screenshotBtn.onclick = function () {
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext('2d');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Draw the current video frame on the temporary canvas
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    let screenshotDataUrl = canvas.toDataURL('image/png');
+    
+    let screenshotPreview = document.createElement('div');
+    screenshotPreview.classList.add('screenshot-preview');
+    
+    let screenshotImage = document.createElement('img');
+    screenshotImage.src = screenshotDataUrl;
 
-        // Create image URL and download link
-        const dataUrl = canvas.toDataURL('image/png');
+    let downloadBtn = document.createElement('button');
+    downloadBtn.textContent = 'Download';
+    downloadBtn.onclick = function () {
+        let link = document.createElement('a');
+        link.href = screenshotDataUrl;
+        link.download = 'webcam-screenshot.png';
+        link.click();
+    };
 
-        // Create the screenshot preview and download button
-        const screenshotPreviewDiv = document.createElement('div');
-        screenshotPreviewDiv.classList.add('screenshot-preview');
-        
-        const img = document.createElement('img');
-        img.src = dataUrl;
-        
-        const downloadButton = document.createElement('button');
-        downloadButton.textContent = 'Download';
-        downloadButton.onclick = () => {
-            const link = document.createElement('a');
-            link.href = dataUrl;
-            link.download = 'screenshot.png';
-            link.click();
-        };
-        
-        screenshotPreviewDiv.appendChild(img);
-        screenshotPreviewDiv.appendChild(downloadButton);
-        screenshotsList.appendChild(screenshotPreviewDiv);
-    }
-});
+    screenshotPreview.appendChild(screenshotImage);
+    screenshotPreview.appendChild(downloadBtn);
+
+    screenshotsList.appendChild(screenshotPreview);
+};

@@ -5,11 +5,17 @@ body {
   padding: 0;
   background-color: #f4f4f9;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  text-align: center;
   flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  text-align: center;
+}
+
+header {
+  margin: 20px 0;
+  font-size: 2rem;
+  font-weight: bold;
 }
 
 h1 {
@@ -96,7 +102,6 @@ video {
   background-color: #ddd;
   box-shadow: #4CAF50;
 }
-
 
 
 /* Screenshot Previews Section */
@@ -186,4 +191,31 @@ button:hover:not(:disabled) {
   margin-top: 10px;
   font-size: 14px;
   color: #666;
+}
+
+/* SEO Paragraph */
+.seo-paragraph {
+  margin-top: 20px;
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.6;
+  width: 80%;
+  max-width: 800px;
+  text-align: center;
+}
+
+footer {
+  margin-top: 30px;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  width: 100%;
+  text-align: center;
+}
+
+.seo-paragraph { 
+  color: #4CAF50;
+  text-align: center;
+  margin: 20px;
+
 }
