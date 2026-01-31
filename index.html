@@ -1,83 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" href="Assets/WebCamTester-.png" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Test your webcam online with ease. Capture high-quality screenshots and download them. Experience a seamless webcam testing tool with full-screen options and dark mode.">
-    <meta name="keywords" content="webcam test, online webcam tester, webcam screenshot, dark mode webcam test, fullscreen webcam">
-    <meta name="author" content="Sid">
-    <meta name="google-site-verification" content="sc35tNYDW0YBCHpgrZKw2Nwar88m4XPUB7yQ1WQa6z4" />
-    <title>Webcam Test</title>
+    <meta name="description" content="Advanced online webcam tester using modern browser APIs. Check your camera resolution, mic, and record videos.">
+    <link rel="icon" href="Assets/WebCamTester-.png" type="image/x-icon">
+    <title>Webcam Control Center</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-
+    <!-- Ionicons for Icons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 <body>
-    <!-- Dark Mode Toggle Button (SVG Icon) -->
-    <button id="Bulpu" class="tooltip" onclick="toggleDarkMode()"> 
-        <svg class="icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9a3 3 0 0 1 3-3m-2 15h4m0-3c0-4.1 4-4.9 4-9A6 6 0 1 0 6 9c0 4 4 5 4 9h4Z"/>
-        </svg>
-    </button>
-    
-    <!-- Fullscreen Toggle Button (SVG Icon) -->
-    <button id="fullscreen" class="fullscreen" onclick="toggleFullscreen()">
-        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 4h4m0 0v4m0-4-5 5M8 20H4m0 0v-4m0 4 5-5"/>
-        </svg>
-    </button>
 
-    <header>
-        <h1>Webcam Test</h1>
-    </header>
+    <!-- Main App Container -->
+    <div class="app-container">
+        
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <ion-icon name="aperture-outline"></ion-icon>
+                <span>Webcam<b>Tester</b></span>
+            </div>
+            <div class="header-controls">
+                <button id="themeToggle" class="icon-btn" title="Toggle Dark/Light Mode">
+                    <ion-icon name="moon-outline"></ion-icon>
+                </button>
+            </div>
+        </header>
 
-    <div class="container">
-        <video id="webcam" class="Webcam" autoplay playsinline></video>
+        <!-- Main Content Grid -->
+        <main class="main-grid">
+            
+            <!-- Video Feed Section -->
+            <section class="video-section">
+                <div class="video-wrapper">
+                    <div id="gridOverlay" class="grid-overlay hidden"></div>
+                    <video id="webcamVideo" autoplay playsinline muted></video>
+                    <div id="videoStatus" class="video-overlay-status">Ready to Start</div>
+                    <div class="count-down hidden" id="countdown">3</div>
+                </div>
+                
+                <!-- Audio Visualizer -->
+                <div class="audio-container">
+                    <canvas id="audioVisualizer"></canvas>
+                </div>
 
-        <div>
-            <button id="startWebcam" class="btn btn-start">Start Webcam</button>
-            <button id="stopWebcam" class="btn btn-stop" disabled>Stop Webcam</button>
-            <button id="screenshot" class="btn btn-screenshot" disabled>Take Screenshot</button>
+                <!-- Main Action Bar (Floating) -->
+                <div class="action-bar">
+                    <button id="btnStart" class="primary-btn"><ion-icon name="power-outline"></ion-icon> Start</button>
+                    <button id="btnStop" class="danger-btn hidden"><ion-icon name="stop-circle-outline"></ion-icon> Stop</button>
+                    <div class="separator"></div>
+                    <button id="btnSnapshot" class="action-btn" disabled title="Take Screenshot (Space)"><ion-icon name="camera-outline"></ion-icon></button>
+                    <button id="btnRecord" class="action-btn" disabled title="Record Video (R)"><ion-icon name="videocam-outline"></ion-icon></button>
+                    <div class="separator"></div>
+                    <button id="btnPip" class="secondary-btn" title="Picture-in-Picture"><ion-icon name="albums-outline"></ion-icon></button>
+                    <button id="btnFullscreen" class="secondary-btn" title="Fullscreen (F)"><ion-icon name="expand-outline"></ion-icon></button>
+                </div>
+            </section>
+
+            <!-- Sidebar / Settings Panel -->
+            <aside class="sidebar">
+                
+                <!-- Settings Card -->
+                <div class="card settings-card">
+                    <h3><ion-icon name="settings-outline"></ion-icon> Settings</h3>
+                    
+                    <div class="form-group">
+                        <label for="cameraSelect">Camera Source</label>
+                        <select id="cameraSelect"><option value="">Default Camera</option></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="micSelect">Microphone</label>
+                        <select id="micSelect"><option value="">Default Microphone</option></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="resolutionSelect">Resolution</label>
+                        <select id="resolutionSelect">
+                            <option value="auto" selected>Auto / Default</option>
+                            <option value="hd">HD (1280x720)</option>
+                            <option value="fhd">Full HD (1920x1080)</option>
+                            <option value="4k">4K (3840x2160)</option>
+                        </select>
+                    </div>
+
+                    <!-- Audio Mute Toggle -->
+                    <div class="tool-row" style="margin-top: 10px;">
+                        <span>Mute Mic</span>
+                        <label class="switch">
+                            <input type="checkbox" id="toggleMute">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- PTZ & Zoom Card (Hidden by default) -->
+                <div class="card ptz-card hidden" id="ptzCard">
+                    <h3><ion-icon name="move-outline"></ion-icon> Camera Controls</h3>
+                    <div class="slider-group">
+                        <label>Zoom</label>
+                        <input type="range" id="zoomRange" min="1" max="10" step="0.1" value="1">
+                    </div>
+                </div>
+
+                <!-- Tools Card -->
+                <div class="card tools-card">
+                    <h3><ion-icon name="construct-outline"></ion-icon> Tools</h3>
+                    
+                    <div class="tool-row">
+                        <span>Mirror Video</span>
+                        <label class="switch">
+                            <input type="checkbox" id="toggleMirror">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="tool-row">
+                        <span>Grid Overlay</span>
+                        <label class="switch">
+                            <input type="checkbox" id="toggleGrid">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="tool-row">
+                        <span>Screen Light</span>
+                        <button id="btnScreenLight" class="small-btn">Activate</button>
+                    </div>
+                </div>
+
+                <!-- Filters Card -->
+                <div class="card filters-card">
+                    <h3><ion-icon name="color-filter-outline"></ion-icon> Filters</h3>
+                    
+                    <div class="slider-group">
+                        <label>Brightness</label>
+                        <input type="range" id="filterBrightness" min="0" max="200" value="100">
+                    </div>
+                    <div class="slider-group">
+                        <label>Contrast</label>
+                        <input type="range" id="filterContrast" min="0" max="200" value="100">
+                    </div>
+                    <div class="slider-group">
+                        <label>Grayscale</label>
+                        <input type="range" id="filterGrayscale" min="0" max="100" value="0">
+                    </div>
+                    <button id="btnResetFilters" class="text-btn">Reset Filters</button>
+                </div>
+
+            </aside>
+
+        </main>
+
+        <!-- Gallery Section -->
+        <section class="gallery-section">
+            <div class="gallery-header">
+                <h2>Captured Media</h2>
+                <button id="btnClearGallery" class="text-danger-btn">Clear All</button>
+            </div>
+            <div id="galleryGrid" class="gallery-grid">
+                <div class="empty-state">No photos or videos taken yet.</div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2025 Webcam Command Center. Built for testing.</p>
+        </footer>
+
+    </div>
+
+    <!-- Screen Light Overlay -->
+    <div id="screenLightOverlay" class="screen-light-overlay hidden">
+        <div class="light-controls">
+            <p>Click anywhere to exit</p>
         </div>
-        <div id="status" class="status">Status: Ready</div>
     </div>
 
-    <!-- Screenshot Previews Section -->
-    <div class="screenshot-previews">
-        <h3>Screenshot Previews</h3>
-        <div id="screenshotsList"></div>
-    </div>
-
-    <section class="seo-paragraph">
-        <h2>Capture and Preview Screenshots with Webcam Test</h2>
-            <p>Welcome to the Webcam Test and Screenshot Tool! This project is an interactive and user-friendly web application that allows you to capture screenshots directly from your webcam. With features like multiple image previews, camera details display, and a sleek dark mode toggle, this app is perfect for testing webcams or capturing quick snapshots.
-            </p>
-        <h3>Key Features</h3>
-        <ul><b> Seamless Webcam Integration:</b>  Start or stop your webcam with a single click.</ul>
-            <ul><b>Screenshot Preview:</b> Preview captured screenshots in real-time and download them instantly.</ul>
-            <ul> <b> Responsive Design:</b>  Fully responsive for desktops, tablets, and mobile devices.</ul>
-            <ul><b> Dark Mode: </b> Switch between light and dark themes with a stylish toggle button.</ul>
-            <ul><b> Fullscreen Mode: </b> Enhance your viewing experience with one-click fullscreen functionality.</ul>
-            <ul><b> User-Friendly UI:</b>  Intuitive design with accessibility in mind.</ul>
-        <h3>Why Choose This Project?</h3>
-        <p>Whether you're building a project, testing your webcam, or experimenting with media streaming APIs, this app offers:</p>
-        <ul><b> Optimized Performance:</b>  Works smoothly across all modern browsers.</ul>
-        <ul><b>Flexible Code:</b> Fully customizable with clean HTML, CSS, and JavaScript.</ul>
-        <ul><b>Extensive Features:</b> Includes advanced functionalities like dynamic previews and device info.</ul>
-        <ul><b>Open Source:</b> Free to use and modify under the MIT license.</ul>
-        <h3>Use Cases</h3>
-        <ul>Quick webcam functionality tests.</ul>
-        <ul>Capturing snapshots for social media or documentation.</ul>
-        <ul>A learning resource for understanding modern browser APIs like getUserMedia.</ul>
-    </section>
-
-    <!-- Footer Section -->
-
-    <footer>
-        <p>2025 Sid's Webcam Tester. All rights reserved.</p>
-        <a href="https://linktr.ee/notsiddharth19">@social</a>
-        <p>contact:@notsiddharth18@proton.me</p>
-    </footer>
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
 
     <script src="script.js"></script>
 </body>
